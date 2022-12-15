@@ -11,4 +11,4 @@ aws ec2 authorize-security-group-ingress --group-name wp-sec-group --protocol tc
 
 aws ec2 authorize-security-group-ingress --group-name wp-sec-group --protocol tcp --port 22 --cidr 0.0.0.0/0
 
-aws ec2 run-instances --image-id ami-08c40ec9ead489470 --count 1 --instance-type t2.micro --key-name wordpresskey --security-groups wp-sec-group --iam-instance-profil Name=LabInstanceProfile --user-data file://~/Cloud-Init_Wordpress-on-AWS/deploy-sh/deployonaws.sh --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=WordPress}]'
+aws ec2 run-instances --image-id ami-08c40ec9ead489470 --count 1 --instance-type t2.micro --key-name wordpresskey --security-groups wp-sec-group --iam-instance-profil Name=LabInstanceProfile --user-data file://~/Cloud-Init_Wordpress-on-AWS/cloud-init/cloud-init.yml --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=WordPress}]'
