@@ -1,0 +1,31 @@
+#cloud-config
+
+package_update: true
+packages:
+  - apache2
+  - mysql-server
+  - php
+  - libapache2-mod-php
+  - php-mysql
+  - php-gd
+  - php-curl
+  - php-xml
+  - php-mbstring
+runcmd:
+  - wget http://wordpress.org/latest.tar.gz
+  - tar -xzvf latest.tar.gz
+  - sudo mv wordpress /var/www/html/wordpress
+  - sudo chown -R www-data:www-data /var/www/html/wordpress
+  - sudo chmod -R 755 /var/www/html/wordpress
+  - sudo mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf.bak
+  - sudo cp /var/www/html/wordpress/apache.conf /etc/apache2/sites-available/000-default.conf
+  - sudo a2enmod rewrite
+  - sudo systemctl restart apache2
+  - sudo mysql -u root -e "CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
+  - sudo mysql -u root -e "GRANT ALL ON wordpress.* TO 'wordpressuser'@'localhost' IDENTIFIED BY 'password';"
+  - sudo mysql -u root -e "FLUSH PRIVILEGES;"
+  - sudo cp /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
+  - sudo sed -i "s/database_name_here/wordpress/g" /var/www/html/wordpress/wp-config.php
+  - sudo sed -i "s/username_here/wordpressuser/g" /var/www/html/wordpress/wp-config.php
+  - sudo sed -i "s/password_here/password/g" /var/www/html/wordpress/wp-config.php
+  - sudo systemctl restart apache2
